@@ -2,7 +2,7 @@
 <html lang="fr" data-theme="light">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Codaris — Agence Web</title>
   <meta name="description" content="Codaris crée des sites modernes et animés qui convertissent."/>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -24,13 +24,12 @@
         <span></span><span></span><span></span>
       </button>
 
-      <ul class="nav__links" id="navLinks">
+      <!-- NOTE: overlay menu lives in this UL -->
+      <ul class="nav__links" id="navLinks" aria-hidden="true">
         <li><a class="nav__link" href="#services">Services</a></li>
         <li><a class="nav__link" href="#work">Nos travaux</a></li>
         <li><a class="nav__link" href="#process">Process</a></li>
         <li><a class="nav__link" href="#contact">Contact</a></li>
-
-        <!-- actions dans le menu mobile -->
         <li class="nav__mobile-actions">
           <a href="#contact" class="btn primary large">Demander un devis</a>
         </li>
@@ -44,7 +43,7 @@
 
   <!-- HERO -->
   <section id="hero" class="hero container-bleed">
-    <!-- carrelage desktop / masqué sur mobile -->
+    <!-- carrelage: now also visible on mobile -->
     <div class="tiles" aria-hidden="true"></div>
     <div class="hero__content">
       <h1 class="hero__title">Des sites modernes, qui convertissent</h1>
@@ -127,7 +126,7 @@
 
       <form id="contactForm" class="form">
         <div class="field">
-          <label for="name" class="small">Nom</Label>
+          <label for="name" class="small">Nom</label>
           <input id="name" type="text" placeholder="Votre nom" required />
         </div>
         <div class="field">
@@ -160,13 +159,14 @@
     // Year
     $('#y').textContent = new Date().getFullYear();
 
-    // ===== Burger menu (Option A: pointer-events fix) =====
+    // ===== Burger menu (Option A: pointer-events fix + centered overlay) =====
     const burger = document.getElementById('burger');
     const navLinks = document.getElementById('navLinks');
 
     burger.addEventListener('click', ()=>{
       const open = navLinks.classList.toggle('open');
       burger.classList.toggle('active', open);
+      navLinks.setAttribute('aria-hidden', open ? 'false' : 'true');
       document.body.style.overflow = open ? 'hidden' : '';
     });
 
@@ -174,18 +174,15 @@
       a.addEventListener('click', ()=>{
         navLinks.classList.remove('open');
         burger.classList.remove('active');
+        navLinks.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
       })
     );
 
-    // ===== HERO Tiles (desktop only) =====
+    // ===== HERO Tiles (desktop + now mobile) =====
     (function initTiles(){
       const wrap = document.querySelector('.tiles');
       function build(){
-        if (window.matchMedia('(max-width: 780px)').matches) { // mobile: pas de tiles
-          wrap.innerHTML = '';
-          return;
-        }
         wrap.innerHTML = '';
         const size = parseInt(getComputedStyle(wrap).getPropertyValue('--size')) || 80;
         const rect = wrap.getBoundingClientRect();
@@ -209,7 +206,7 @@
 
     // ===== PROJETS CAROUSEL (auto + manuel) =====
     const PROJECTS = [
-      { title: "Blizz’art", href: "./Blizz%27Art/index.html", img: "./Blizz%27Art/blizzart_homepage.png", caption: "Plateforme artistique" },
+      { title: "Blizz’art", href: "./Blizz%27Art/index.html", img: "./Blizz%27Art/images/blizzart_homepage.png", caption: "Plateforme artistique" },
       { title: "iSave", href: "./iSave/index.html", img: "./iSave/isave_homepage.png", caption: "Association engagée" },
       { title: "Tempo Fitness", href: "./tempo_fitness/index.html", img: "./tempo_fitness/images/tempo-homepage.png", caption: "Club de sport" },
       { title: "Têtàtêtes", href: "./tetatetes/index.html", img: "./tetatetes/tetatetes_homepage.png", caption: "Magazine culturel" }
@@ -328,3 +325,4 @@
   </script>
 </body>
 </html>
+
