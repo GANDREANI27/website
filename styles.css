@@ -1,6 +1,6 @@
 /* =========================================================
-   Codaris — mobile OK (Option A), burger clickable,
-   light-only, tiles desktop + gradient mobile,
+   Codaris — lisibilité logo + burger overlay blanc centré
+   Light-only, tiles desktop + gradient mobile,
    services & work carousels auto, vertical timeline mobile
 ========================================================= */
 
@@ -46,17 +46,19 @@ a{ color:inherit; text-decoration:none; }
 @media (max-width:1000px){ .grid.four{ grid-template-columns:repeat(2,1fr); } }
 @media (max-width:620px){ .grid.four, .grid.two{ grid-template-columns:1fr; } }
 
-/* HEADER / NAV */
+/* HEADER / NAV — meilleure lisibilité logo */
 .site-header{
-  position:sticky; top:0; z-index:2000; /* au-dessus de tout */
-  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  position:sticky; top:0; z-index:2000;
+  background: rgba(255,255,255,.92); /* léger fond blanc pour contraste */
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--stroke-softer);
 }
-.site-header::after{ content:""; display:block; height:1px; background:var(--stroke-softer); transform:translateY(-1px); }
-.nav{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; gap:18px; }
-.logo{ display:flex; align-items:center; gap:10px; font-weight:700; color:var(--text); }
+.nav{ display:flex; align-items:center; justify-content:space-between; padding:12px 0; gap:18px; }
+.logo{ display:flex; align-items:center; gap:10px; font-weight:800; color:#111; } /* force contraste */
 .logo__img{ width:34px; height:34px; object-fit:contain; }
-.logo__word{ font-family:var(--font-head); text-transform:lowercase; letter-spacing:.2px; }
+.logo__word{ font-family:var(--font-head); text-transform:lowercase; letter-spacing:.25px; }
 
+/* Liens nav (desktop) */
 .nav__links{ list-style:none; display:flex; gap:20px; margin:0; padding:0; }
 .nav__link{ position:relative; padding:6px 0; font-weight:600; }
 .nav__link::after{ content:""; position:absolute; left:0; right:100%; bottom:-2px; height:2px; background:linear-gradient(90deg,#7c3aed,#06b6d4); transition:right .25s; }
@@ -64,38 +66,7 @@ a{ color:inherit; text-decoration:none; }
 .nav__actions{ display:flex; gap:10px; align-items:center; }
 .nav__mobile-actions{ display:none; }
 
-/* BURGER */
-.burger{ display:none; flex-direction:column; justify-content:center; gap:5px; width:32px; height:24px; background:none; border:0; cursor:pointer; z-index:2100; }
-.burger span{ height:3px; width:100%; border-radius:2px; background:var(--text); transition:all .3s; }
-.burger.active span:nth-child(1){ transform:translateY(9px) rotate(45deg); }
-.burger.active span:nth-child(2){ opacity:0; }
-.burger.active span:nth-child(3){ transform:translateY(-9px) rotate(-45deg); }
-
-/* MOBILE NAV OVERLAY — Option A: pointer-events fix */
-@media (max-width:780px){
-  .burger{ display:flex; }
-  .nav__links{
-    position:fixed; inset:0; top:-100vh;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:28px;
-    background:rgba(255,255,255,.96); color:#111;
-    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-    transition: top .45s ease; padding:0; margin:0; z-index:2050;
-
-    /* Option A — fermé : ne capte rien */
-    pointer-events: none;
-  }
-  .nav__links.open{
-    top:0;
-    /* Option A — ouvert : cliquable */
-    pointer-events: auto;
-  }
-  .nav__links a{ font-size:1.4rem; font-family:var(--font-head); }
-  .nav__actions{ display:none; }
-  .nav__mobile-actions{ display:flex; gap:12px; flex-wrap:wrap; }
-  .btn.small{ padding:9px 12px; font-size:.95rem; }
-}
-
-/* BUTTONS */
+/* Buttons */
 .btn{
   position:relative; border:0; border-radius:999px; padding:12px 18px; cursor:pointer;
   font-weight:700; color:#fff; background:linear-gradient(135deg,#7c3aed,#06b6d4);
@@ -103,8 +74,60 @@ a{ color:inherit; text-decoration:none; }
   transition:transform .18s cubic-bezier(.2,.7,.2,1), box-shadow .25s, opacity .2s, background .25s;
 }
 .btn.big{ padding:14px 22px; font-size:1.05rem; }
+.btn.large{ padding:14px 22px; font-size:1.05rem; width: min(420px, 82vw); text-align:center; }
 .btn:hover{ transform:translateY(-3px); box-shadow:0 18px 46px rgba(0,0,0,.25); }
-.btn.ghost{ background:transparent; color:var(--text); border:1px solid var(--stroke-softer); }
+.btn.ghost{ background:transparent; color:#111; border:1px solid var(--stroke-softer); }
+
+/* BURGER */
+.burger{ display:none; flex-direction:column; justify-content:center; gap:5px; width:32px; height:24px; background:none; border:0; cursor:pointer; z-index:2100; }
+.burger span{ height:3px; width:100%; border-radius:2px; background:#111; transition:all .3s; }
+.burger.active span:nth-child(1){ transform:translateY(9px) rotate(45deg); }
+.burger.active span:nth-child(2){ opacity:0; }
+.burger.active span:nth-child(3){ transform:translateY(-9px) rotate(-45deg); }
+
+/* MOBILE NAV OVERLAY — fond blanc plein, items centrés & ordonnés */
+@media (max-width:780px){
+  .burger{ display:flex; }
+  .nav__actions{ display:none; }
+
+  .nav__links{
+    position:fixed; inset:0; top:-100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap: 22px;                     /* espacement cohérent */
+    background:#fff;               /* fond blanc plein */
+    color:#111;                    /* liens sombres lisibles */
+    transition: top .45s ease;
+    padding: 28px 20px;            /* respirations */
+    margin:0; z-index:2050;
+
+    /* Option A — fermé : ne capte pas les clics */
+    pointer-events: none;
+  }
+  .nav__links.open{
+    top:0;
+    pointer-events: auto;          /* ouvert : cliquable */
+  }
+
+  /* Liens bien centrés et typographiés */
+  .nav__links a{
+    font-size:1.4rem;
+    font-family:var(--font-head);
+    font-weight:700;
+    text-align:center;
+    color:#111;
+  }
+
+  /* CTA en bas, large, centré */
+  .nav__mobile-actions{
+    display:flex; flex-direction:column; align-items:center; gap:12px;
+    margin-top: 10px;
+    width:100%;
+  }
+  .nav__mobile-actions .btn.large{ width: min(420px, 82vw); }
+
+  /* on enlève les effets d’underline sur mobile pour un rendu plus clean */
+  .nav__link::after{ display:none; }
+}
 
 /* HERO */
 .hero{
@@ -120,7 +143,7 @@ a{ color:inherit; text-decoration:none; }
   .btn.big{ padding:12px 16px; font-size:1rem; }
 }
 
-/* Vignette lisibilité et neutre pour les clics */
+/* Vignette lisibilité */
 .hero::before{
   content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
   background:
@@ -132,7 +155,6 @@ a{ color:inherit; text-decoration:none; }
 .tiles{
   --size: var(--tile-size);
   position:absolute; inset:0; display:grid; z-index:2;
-  /* IMPORTANT: les tiles sont interactives, mais ne doivent pas recouvrir le header */
   grid-template-columns:repeat(auto-fill, var(--size));
   grid-auto-rows: var(--size);
   filter: blur(3px) saturate(1.1);
@@ -236,7 +258,7 @@ a{ color:inherit; text-decoration:none; }
 .field{ display:grid; gap:6px; }
 .field input, .field textarea{
   width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--stroke-soft);
-  background:rgba(0,0,0,.02); color:var(--text); outline:none; transition:box-shadow .2s, border-color .2s, background .2s;
+  background:rgba(0,0,0,.02); color:#111; outline:none; transition:box-shadow .2s, border-color .2s, background .2s;
 }
 .field input:focus, .field textarea:focus{ border-color:#7c3aed; box-shadow:0 0 0 6px var(--ring); }
 .small{ font-size:.92rem; }
