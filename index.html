@@ -29,10 +29,14 @@
         <li><a class="nav__link" href="#work">Nos travaux</a></li>
         <li><a class="nav__link" href="#process">Process</a></li>
         <li><a class="nav__link" href="#contact">Contact</a></li>
+        <!-- actions dans le menu mobile -->
+        <li class="nav__mobile-actions">
+          <button id="themeToggleMobile" class="btn ghost small">☀️ / 🌙</button>
+          <a href="#contact" class="btn primary small">Demander un devis</a>
+        </li>
       </ul>
 
       <div class="nav__actions">
-        <button id="themeToggle" class="btn ghost" aria-label="Mode jour/nuit">☀️ / 🌙</button>
         <a href="#contact" class="btn primary">Demander un devis</a>
       </div>
     </nav>
@@ -57,11 +61,18 @@
         <h2 class="section__title">Services</h2>
         <p class="section__kicker">Du concept à la mise en ligne.</p>
       </header>
-      <div class="grid four">
+
+      <!-- Liste desktop (sera transformée en carrousel sur mobile) -->
+      <div id="servicesList" class="grid four">
         <article class="svc card"><h3>Design</h3><p>UI/UX, maquettes Figma, identité visuelle.</p></article>
         <article class="svc card"><h3>Développement</h3><p>Sites vitrines rapides, e-commerce, animations.</p></article>
         <article class="svc card"><h3>Motion</h3><p>Micro-interactions, transitions, carrousels fluides.</p></article>
         <article class="svc card"><h3>Maintenance</h3><p>Mises à jour, optimisation, accompagnement.</p></article>
+      </div>
+
+      <!-- Conteneur carrousel mobile (rempli en JS) -->
+      <div id="servicesCarousel" class="svc-carousel" aria-label="Carrousel services" hidden>
+        <div class="svc-track"></div>
       </div>
     </div>
   </section>
@@ -108,8 +119,8 @@
         <h2 class="section__title">Contact</h2>
         <p class="small">Réponse rapide sous 24h.</p>
         <ul class="contact__list">
-          <li><a href="mailto:hello@codaris.agency">contact@codarislabs.org</a></li>
-          <li><a href="tel:+33600000000">06 37 61 27 86</a></li>
+          <li><a href="mailto:hello@codaris.agency">hello@codaris.agency</a></li>
+          <li><a href="tel:+33600000000">+33 6 00 00 00 00</a></li>
         </ul>
       </div>
 
@@ -144,20 +155,22 @@
   <!-- APP JS -->
   <script>
     const $ = s => document.querySelector(s);
-    const $$ = s => document.querySelectorAll(s);
 
     // Year
     $('#y').textContent = new Date().getFullYear();
 
-    // Theme toggle
-    const themeBtn = $('#themeToggle');
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.dataset.theme = savedTheme;
-    themeBtn.addEventListener('click', ()=>{
-      const cur = document.documentElement.dataset.theme;
-      const next = cur === 'light' ? 'dark' : 'light';
+    // Theme toggle (desktop + mobile)
+    function setTheme(next){
       document.documentElement.dataset.theme = next;
       localStorage.setItem('theme', next);
+    }
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+    $('#themeToggle')?.addEventListener('click', ()=>{
+      setTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
+    });
+    $('#themeToggleMobile')?.addEventListener('click', ()=>{
+      setTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
     });
 
     // Burger menu
@@ -202,33 +215,22 @@
     })();
 
     // ====== PROJETS DU CARROUSEL (depuis tes dossiers) ======
-    // NB: dossier "Blizz’Art" encodé : Blizz%27Art
     const PROJECTS = [
       { title: "Blizz’art", href: "./Blizz%27Art/index.html", img: "./Blizz%27Art/blizzart_homepage.png", caption: "Plateforme artistique" },
       { title: "iSave", href: "./iSave/index.html", img: "./iSave/isave_homepage.png", caption: "Association engagée" },
       { title: "Tempo Fitness", href: "./tempo_fitness/index.html", img: "./tempo_fitness/images/tempo-homepage.png", caption: "Club de sport" },
       { title: "Têtàtêtes", href: "./tetatetes/index.html", img: "./tetatetes/tetatetes_homepage.png", caption: "Magazine culturel" },
-      // Ajoute ici d'autres projets si tu en as un 5e
+      // ajoute un 5e si tu veux, même modèle
     ];
-
     (function renderProjectsAndRunMarquee() {
       const track = document.getElementById('workTrack');
       if(!track) return;
-
-      // 1) Génère les slides
       track.innerHTML = PROJECTS.map(p => `
         <a href="${p.href}" class="slide" target="_blank" rel="noopener">
-          <div class="slide__img">
-            <img src="${p.img}" alt="${p.title} — ${p.caption}">
-          </div>
+          <div class="slide__img"><img src="${p.img}" alt="${p.title} — ${p.caption}"></div>
           <div class="slide__txt">${p.title} — ${p.caption}</div>
-        </a>
-      `).join('');
-
-      // 2) Duplique pour boucle continue
-      track.innerHTML += track.innerHTML;
-
-      // 3) Animation continue
+        </a>`).join('');
+      track.innerHTML += track.innerHTML; // duplication pour la boucle
       let x = 0, speed = 0.9, playing = true;
       function step(){
         if(playing){
@@ -240,22 +242,77 @@
         requestAnimationFrame(step);
       }
       step();
-
       track.addEventListener('mouseenter', ()=> playing=false);
       track.addEventListener('mouseleave', ()=> playing=true);
       track.addEventListener('touchstart', ()=> playing=false, {passive:true});
       track.addEventListener('touchend', ()=> playing=true);
     })();
 
-    // Timeline progress on scroll
+    // ===== Services → carrousel mobile =====
+    (function servicesCarousel(){
+      const list = document.getElementById('servicesList');
+      const carousel = document.getElementById('servicesCarousel');
+      const track = carousel.querySelector('.svc-track');
+
+      function toCarousel(){
+        // passer en carrousel
+        const cards = Array.from(list.querySelectorAll('.svc.card'));
+        track.innerHTML = cards.map(c => `<article class="svc card">${c.innerHTML}</article>`).join('');
+        list.hidden = true;
+        carousel.hidden = false;
+
+        // auto scroll
+        let playing = true;
+        let scrollSpeed = 0.4; // plus lent que le work
+        let raf;
+        function auto(){
+          if(playing){
+            carousel.scrollLeft += scrollSpeed;
+            // boucle douce
+            if(carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 2){
+              carousel.scrollLeft = 0;
+            }
+          }
+          raf = requestAnimationFrame(auto);
+        }
+        auto();
+
+        // pause au toucher / survol
+        carousel.addEventListener('mouseenter', ()=> playing=false);
+        carousel.addEventListener('mouseleave', ()=> playing=true);
+        carousel.addEventListener('touchstart', ()=> playing=false, {passive:true});
+        carousel.addEventListener('touchend', ()=> playing=true);
+      }
+
+      function toGrid(){
+        // repasser en grille
+        carousel.hidden = true;
+        list.hidden = false;
+      }
+
+      const mql = window.matchMedia('(max-width: 780px)');
+      function apply(e){ e.matches ? toCarousel() : toGrid(); }
+      apply(mql); mql.addEventListener('change', apply);
+    })();
+
+    // ===== Timeline progress (horizontal desktop / vertical mobile) =====
     (function timeline(){
       const tl = document.getElementById('timeline');
       const progress = tl.querySelector('.tl-progress');
       function update(){
         const r = tl.getBoundingClientRect();
-        const viewport = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-        const visible = Math.min(1, Math.max(0, (viewport - r.top) / (viewport + r.height)));
-        progress.style.transform = `scaleX(${visible})`;
+        const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        // si timeline verticale (CSS <=780px), on calcule différemment
+        const vertical = window.matchMedia('(max-width: 780px)').matches;
+        if(vertical){
+          const total = r.height;
+          const visible = Math.min(total, Math.max(0, (vh/2) - r.top));
+          const ratio = Math.min(1, Math.max(0, visible / total));
+          progress.style.transform = `scaleY(${ratio})`;
+        }else{
+          const visible = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+          progress.style.transform = `scaleX(${visible})`;
+        }
       }
       update();
       window.addEventListener('scroll', update, {passive:true});
@@ -286,3 +343,5 @@
   </script>
 </body>
 </html>
+
+
