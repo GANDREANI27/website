@@ -29,9 +29,7 @@
         <li><a class="nav__link" href="#work">Nos travaux</a></li>
         <li><a class="nav__link" href="#process">Process</a></li>
         <li><a class="nav__link" href="#contact">Contact</a></li>
-        <!-- actions dans le menu mobile -->
         <li class="nav__mobile-actions">
-          <button id="themeToggleMobile" class="btn ghost small">☀️ / 🌙</button>
           <a href="#contact" class="btn primary small">Demander un devis</a>
         </li>
       </ul>
@@ -44,6 +42,7 @@
 
   <!-- HERO (plein écran) -->
   <section id="hero" class="hero container-bleed">
+    <!-- carrelage desktop / masqué sur mobile -->
     <div class="tiles" aria-hidden="true"></div>
     <div class="hero__content">
       <h1 class="hero__title">Des sites modernes, qui convertissent</h1>
@@ -62,7 +61,7 @@
         <p class="section__kicker">Du concept à la mise en ligne.</p>
       </header>
 
-      <!-- Liste desktop (sera transformée en carrousel sur mobile) -->
+      <!-- Grille desktop -->
       <div id="servicesList" class="grid four">
         <article class="svc card"><h3>Design</h3><p>UI/UX, maquettes Figma, identité visuelle.</p></article>
         <article class="svc card"><h3>Développement</h3><p>Sites vitrines rapides, e-commerce, animations.</p></article>
@@ -70,7 +69,7 @@
         <article class="svc card"><h3>Maintenance</h3><p>Mises à jour, optimisation, accompagnement.</p></article>
       </div>
 
-      <!-- Conteneur carrousel mobile (rempli en JS) -->
+      <!-- Carrousel mobile (rempli par JS) -->
       <div id="servicesCarousel" class="svc-carousel" aria-label="Carrousel services" hidden>
         <div class="svc-track"></div>
       </div>
@@ -102,11 +101,11 @@
       <div class="timeline-h" id="timeline">
         <div class="tl-bar" aria-hidden="true"><span class="tl-progress"></span></div>
         <ul class="tl-steps">
-          <li class="step"><span class="dot">1</span><span>Découverte</span></li>
-          <li class="step"><span class="dot">2</span><span>Design</span></li>
-          <li class="step"><span class="dot">3</span><span>Développement</span></li>
-          <li class="step"><span class="dot">4</span><span>Livraison</span></li>
-          <li class="step"><span class="dot">5</span><span>Suivi</span></li>
+          <li class="step"><span class="dot">1</span><span class="label">Découverte</span></li>
+          <li class="step"><span class="dot">2</span><span class="label">Design</span></li>
+          <li class="step"><span class="dot">3</span><span class="label">Développement</span></li>
+          <li class="step"><span class="dot">4</span><span class="label">Livraison</span></li>
+          <li class="step"><span class="dot">5</span><span class="label">Suivi</span></li>
         </ul>
       </div>
     </div>
@@ -155,25 +154,12 @@
   <!-- APP JS -->
   <script>
     const $ = s => document.querySelector(s);
+    const $$ = s => document.querySelectorAll(s);
 
     // Year
     $('#y').textContent = new Date().getFullYear();
 
-    // Theme toggle (desktop + mobile)
-    function setTheme(next){
-      document.documentElement.dataset.theme = next;
-      localStorage.setItem('theme', next);
-    }
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(savedTheme);
-    $('#themeToggle')?.addEventListener('click', ()=>{
-      setTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
-    });
-    $('#themeToggleMobile')?.addEventListener('click', ()=>{
-      setTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
-    });
-
-    // Burger menu
+    // Burger menu (fix click + z-index + lock scroll)
     const burger = $('#burger');
     const navLinks = $('#navLinks');
     burger.addEventListener('click', ()=>{
@@ -189,10 +175,14 @@
       })
     );
 
-    // HERO Tiles (XL, responsive, plein écran)
+    // HERO Tiles (desktop only)
     (function initTiles(){
       const wrap = document.querySelector('.tiles');
       function build(){
+        if (window.matchMedia('(max-width: 780px)').matches) { // mobile: pas de tiles
+          wrap.innerHTML = '';
+          return;
+        }
         wrap.innerHTML = '';
         const size = parseInt(getComputedStyle(wrap).getPropertyValue('--size')) || 80;
         const rect = wrap.getBoundingClientRect();
@@ -214,13 +204,12 @@
       window.addEventListener('resize', () => { clearTimeout(wrap._t); wrap._t=setTimeout(build,120); });
     })();
 
-    // ====== PROJETS DU CARROUSEL (depuis tes dossiers) ======
+    // ===== PROJETS CAROUSEL (auto + manuel) =====
     const PROJECTS = [
       { title: "Blizz’art", href: "./Blizz%27Art/index.html", img: "./Blizz%27Art/blizzart_homepage.png", caption: "Plateforme artistique" },
       { title: "iSave", href: "./iSave/index.html", img: "./iSave/isave_homepage.png", caption: "Association engagée" },
       { title: "Tempo Fitness", href: "./tempo_fitness/index.html", img: "./tempo_fitness/images/tempo-homepage.png", caption: "Club de sport" },
       { title: "Têtàtêtes", href: "./tetatetes/index.html", img: "./tetatetes/tetatetes_homepage.png", caption: "Magazine culturel" },
-      // ajoute un 5e si tu veux, même modèle
     ];
     (function renderProjectsAndRunMarquee() {
       const track = document.getElementById('workTrack');
@@ -230,8 +219,9 @@
           <div class="slide__img"><img src="${p.img}" alt="${p.title} — ${p.caption}"></div>
           <div class="slide__txt">${p.title} — ${p.caption}</div>
         </a>`).join('');
-      track.innerHTML += track.innerHTML; // duplication pour la boucle
-      let x = 0, speed = 0.9, playing = true;
+      track.innerHTML += track.innerHTML; // duplication
+
+      let x = 0, speed = 0.9, playing = true, raf;
       function step(){
         if(playing){
           x -= speed;
@@ -239,36 +229,36 @@
           if (Math.abs(x) >= half) x = 0;
           track.style.transform = `translateX(${x}px)`;
         }
-        requestAnimationFrame(step);
+        raf = requestAnimationFrame(step);
       }
       step();
-      track.addEventListener('mouseenter', ()=> playing=false);
-      track.addEventListener('mouseleave', ()=> playing=true);
-      track.addEventListener('touchstart', ()=> playing=false, {passive:true});
-      track.addEventListener('touchend', ()=> playing=true);
+
+      // pause si interaction
+      ['mouseenter','touchstart','pointerdown'].forEach(evt => track.addEventListener(evt, ()=> playing=false, {passive:true}));
+      ['mouseleave','touchend','pointerup','pointercancel'].forEach(evt => track.addEventListener(evt, ()=> playing=true, {passive:true}));
     })();
 
-    // ===== Services → carrousel mobile =====
+    // ===== Services → carrousel mobile (auto + manuel) =====
     (function servicesCarousel(){
       const list = document.getElementById('servicesList');
       const carousel = document.getElementById('servicesCarousel');
       const track = carousel.querySelector('.svc-track');
 
       function toCarousel(){
-        // passer en carrousel
         const cards = Array.from(list.querySelectorAll('.svc.card'));
         track.innerHTML = cards.map(c => `<article class="svc card">${c.innerHTML}</article>`).join('');
+        // Dupliquer pour boucler
+        track.innerHTML += track.innerHTML;
+
         list.hidden = true;
         carousel.hidden = false;
 
-        // auto scroll
         let playing = true;
-        let scrollSpeed = 0.4; // plus lent que le work
         let raf;
+        const speed = 0.5;
         function auto(){
           if(playing){
-            carousel.scrollLeft += scrollSpeed;
-            // boucle douce
+            carousel.scrollLeft += speed;
             if(carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 2){
               carousel.scrollLeft = 0;
             }
@@ -277,15 +267,12 @@
         }
         auto();
 
-        // pause au toucher / survol
-        carousel.addEventListener('mouseenter', ()=> playing=false);
-        carousel.addEventListener('mouseleave', ()=> playing=true);
-        carousel.addEventListener('touchstart', ()=> playing=false, {passive:true});
-        carousel.addEventListener('touchend', ()=> playing=true);
+        // pause si interaction utilisateur
+        ['mouseenter','touchstart','pointerdown'].forEach(evt => carousel.addEventListener(evt, ()=> playing=false, {passive:true}));
+        ['mouseleave','touchend','pointerup','pointercancel'].forEach(evt => carousel.addEventListener(evt, ()=> playing=true, {passive:true}));
       }
 
       function toGrid(){
-        // repasser en grille
         carousel.hidden = true;
         list.hidden = false;
       }
@@ -295,14 +282,13 @@
       apply(mql); mql.addEventListener('change', apply);
     })();
 
-    // ===== Timeline progress (horizontal desktop / vertical mobile) =====
+    // ===== Timeline progress (horiz desktop / vert mobile) =====
     (function timeline(){
       const tl = document.getElementById('timeline');
       const progress = tl.querySelector('.tl-progress');
       function update(){
         const r = tl.getBoundingClientRect();
         const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-        // si timeline verticale (CSS <=780px), on calcule différemment
         const vertical = window.matchMedia('(max-width: 780px)').matches;
         if(vertical){
           const total = r.height;
@@ -343,5 +329,4 @@
   </script>
 </body>
 </html>
-
 
