@@ -29,6 +29,7 @@
         <li><a class="nav__link" href="#work">Nos travaux</a></li>
         <li><a class="nav__link" href="#process">Process</a></li>
         <li><a class="nav__link" href="#contact">Contact</a></li>
+        <!-- actions dans le menu mobile -->
         <li class="nav__mobile-actions">
           <a href="#contact" class="btn primary small">Demander un devis</a>
         </li>
@@ -40,7 +41,7 @@
     </nav>
   </header>
 
-  <!-- HERO (plein écran) -->
+  <!-- HERO -->
   <section id="hero" class="hero container-bleed">
     <!-- carrelage desktop / masqué sur mobile -->
     <div class="tiles" aria-hidden="true"></div>
@@ -118,8 +119,8 @@
         <h2 class="section__title">Contact</h2>
         <p class="small">Réponse rapide sous 24h.</p>
         <ul class="contact__list">
-          <li><a href="mailto:hello@codaris.agency">hello@codaris.agency</a></li>
-          <li><a href="tel:+33600000000">+33 6 00 00 00 00</a></li>
+          <li><a href="mailto:hello@codaris.agency">contact@codarislabs.org</a></li>
+          <li><a href="tel:+33600000000">06 37 61 27 86</a></li>
         </ul>
       </div>
 
@@ -154,28 +155,29 @@
   <!-- APP JS -->
   <script>
     const $ = s => document.querySelector(s);
-    const $$ = s => document.querySelectorAll(s);
 
     // Year
     $('#y').textContent = new Date().getFullYear();
 
-    // Burger menu (fix click + z-index + lock scroll)
-    const burger = $('#burger');
-    const navLinks = $('#navLinks');
+    // ===== Burger menu (Option A: pointer-events fix) =====
+    const burger = document.getElementById('burger');
+    const navLinks = document.getElementById('navLinks');
+
     burger.addEventListener('click', ()=>{
-      burger.classList.toggle('active');
-      navLinks.classList.toggle('open');
-      document.body.style.overflow = navLinks.classList.contains('open') ? 'hidden' : '';
+      const open = navLinks.classList.toggle('open');
+      burger.classList.toggle('active', open);
+      document.body.style.overflow = open ? 'hidden' : '';
     });
+
     navLinks.querySelectorAll('a').forEach(a =>
       a.addEventListener('click', ()=>{
-        burger.classList.remove('active');
         navLinks.classList.remove('open');
+        burger.classList.remove('active');
         document.body.style.overflow = '';
       })
     );
 
-    // HERO Tiles (desktop only)
+    // ===== HERO Tiles (desktop only) =====
     (function initTiles(){
       const wrap = document.querySelector('.tiles');
       function build(){
@@ -221,7 +223,7 @@
         </a>`).join('');
       track.innerHTML += track.innerHTML; // duplication
 
-      let x = 0, speed = 0.9, playing = true, raf;
+      let x = 0, speed = 0.9, playing = true;
       function step(){
         if(playing){
           x -= speed;
@@ -229,11 +231,10 @@
           if (Math.abs(x) >= half) x = 0;
           track.style.transform = `translateX(${x}px)`;
         }
-        raf = requestAnimationFrame(step);
+        requestAnimationFrame(step);
       }
       step();
 
-      // pause si interaction
       ['mouseenter','touchstart','pointerdown'].forEach(evt => track.addEventListener(evt, ()=> playing=false, {passive:true}));
       ['mouseleave','touchend','pointerup','pointercancel'].forEach(evt => track.addEventListener(evt, ()=> playing=true, {passive:true}));
     })();
@@ -247,14 +248,12 @@
       function toCarousel(){
         const cards = Array.from(list.querySelectorAll('.svc.card'));
         track.innerHTML = cards.map(c => `<article class="svc card">${c.innerHTML}</article>`).join('');
-        // Dupliquer pour boucler
-        track.innerHTML += track.innerHTML;
+        track.innerHTML += track.innerHTML; // boucle
 
         list.hidden = true;
         carousel.hidden = false;
 
         let playing = true;
-        let raf;
         const speed = 0.5;
         function auto(){
           if(playing){
@@ -263,11 +262,10 @@
               carousel.scrollLeft = 0;
             }
           }
-          raf = requestAnimationFrame(auto);
+          requestAnimationFrame(auto);
         }
         auto();
 
-        // pause si interaction utilisateur
         ['mouseenter','touchstart','pointerdown'].forEach(evt => carousel.addEventListener(evt, ()=> playing=false, {passive:true}));
         ['mouseleave','touchend','pointerup','pointercancel'].forEach(evt => carousel.addEventListener(evt, ()=> playing=true, {passive:true}));
       }
@@ -305,20 +303,20 @@
       window.addEventListener('resize', update);
     })();
 
-    // EmailJS
+    // EmailJS (facultatif : à commenter si inutile)
     const EMAILJS_PUBLIC_KEY = "JlVPdGZfHPDni3Yyp";
     const EMAILJS_SERVICE_ID = "service_a2gwgj2";
     const EMAILJS_TEMPLATE_ID = "template_ijfo9ig";
     if(window.emailjs){ emailjs.init(EMAILJS_PUBLIC_KEY); }
     $('#contactForm').addEventListener('submit', async (e)=>{
       e.preventDefault();
-      const status = $('#formStatus');
+      const status = document.getElementById('formStatus');
       status.textContent = "Envoi...";
       try{
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-          from_name: $('#name').value,
-          reply_to: $('#email').value,
-          message: $('#message').value
+          from_name: document.getElementById('name').value,
+          reply_to: document.getElementById('email').value,
+          message: document.getElementById('message').value
         });
         status.textContent = "Message envoyé. Merci !";
         e.target.reset();
@@ -329,4 +327,3 @@
   </script>
 </body>
 </html>
-
