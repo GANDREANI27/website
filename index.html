@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Codaris — Agence Web</title>
+  <meta name="description" content="Codaris crée des sites modernes et animés qui convertissent."/>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script>document.documentElement.classList.add('js')</script>
+  <style>html,body{max-width:100%;overflow-x:hidden}</style>
+</head>
+<body>
+
+  <!-- HEADER / NAVBAR -->
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="#hero" class="logo" aria-label="Codaris">
+        <img src="images/codaris-logo.png" alt="Codaris" class="logo__img">
+        <span class="logo__word">codaris</span>
+      </a>
+
+      <button class="burger" id="burger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav__links" id="navLinks">
+        <li><a class="nav__link" href="#services">Services</a></li>
+        <li><a class="nav__link" href="#work">Nos travaux</a></li>
+        <li><a class="nav__link" href="#process">Process</a></li>
+        <li><a class="nav__link" href="#contact">Contact</a></li>
+      </ul>
+
+      <div class="nav__actions">
+        <button id="themeToggle" class="btn ghost" aria-label="Mode jour/nuit">☀️ / 🌙</button>
+        <a href="#contact" class="btn primary">Demander un devis</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- HERO (plein écran) -->
+  <section id="hero" class="hero container-bleed">
+    <div class="tiles" aria-hidden="true"></div>
+    <div class="hero__content">
+      <h1 class="hero__title">Des sites modernes, qui convertissent</h1>
+      <div class="hero__ctas">
+        <a href="#contact" class="btn primary big">Demander un devis</a>
+        <a href="#work" class="btn ghost big">Voir nos travaux</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="section">
+    <div class="container">
+      <header class="section__head">
+        <h2 class="section__title">Services</h2>
+        <p class="section__kicker">Du concept à la mise en ligne.</p>
+      </header>
+      <div class="grid four">
+        <article class="svc card"><h3>Design</h3><p>UI/UX, maquettes Figma, identité visuelle.</p></article>
+        <article class="svc card"><h3>Développement</h3><p>Sites vitrines rapides, e-commerce, animations.</p></article>
+        <article class="svc card"><h3>Motion</h3><p>Micro-interactions, transitions, carrousels fluides.</p></article>
+        <article class="svc card"><h3>Maintenance</h3><p>Mises à jour, optimisation, accompagnement.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK / CAROUSEL -->
+  <section id="work" class="section">
+    <div class="container">
+      <header class="section__head">
+        <h2 class="section__title">Nos travaux</h2>
+        <p class="section__kicker">Sélection de projets en défilement continu.</p>
+      </header>
+
+      <div class="marquee" aria-label="Carousel projets">
+        <div class="track" id="workTrack"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS / TIMELINE -->
+  <section id="process" class="section">
+    <div class="container">
+      <header class="section__head">
+        <h2 class="section__title">Process</h2>
+        <p class="section__kicker">Un parcours clair, animé et efficace.</p>
+      </header>
+
+      <div class="timeline-h" id="timeline">
+        <div class="tl-bar" aria-hidden="true"><span class="tl-progress"></span></div>
+        <ul class="tl-steps">
+          <li class="step"><span class="dot">1</span><span>Découverte</span></li>
+          <li class="step"><span class="dot">2</span><span>Design</span></li>
+          <li class="step"><span class="dot">3</span><span>Développement</span></li>
+          <li class="step"><span class="dot">4</span><span>Livraison</span></li>
+          <li class="step"><span class="dot">5</span><span>Suivi</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section">
+    <div class="container grid two contact">
+      <div class="contact__panel">
+        <h2 class="section__title">Contact</h2>
+        <p class="small">Réponse rapide sous 24h.</p>
+        <ul class="contact__list">
+          <li><a href="mailto:hello@codaris.agency">contact@codarislabs.org</a></li>
+          <li><a href="tel:+33600000000">06 37 61 27 86</a></li>
+        </ul>
+      </div>
+
+      <form id="contactForm" class="form">
+        <div class="field">
+          <label for="name" class="small">Nom</label>
+          <input id="name" type="text" placeholder="Votre nom" required />
+        </div>
+        <div class="field">
+          <label for="email" class="small">Email</label>
+          <input id="email" type="email" placeholder="adresse@mail.com" required />
+        </div>
+        <div class="field">
+          <label for="message" class="small">Message</label>
+          <textarea id="message" rows="6" placeholder="Parlez-nous de votre projet" required></textarea>
+        </div>
+        <button class="btn primary" type="submit">Envoyer</button>
+        <p id="formStatus" class="small muted" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p class="small">© <span id="y"></span> Codaris</p>
+    </div>
+  </footer>
+
+  <!-- EmailJS (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+  <!-- APP JS -->
+  <script>
+    const $ = s => document.querySelector(s);
+    const $$ = s => document.querySelectorAll(s);
+
+    // Year
+    $('#y').textContent = new Date().getFullYear();
+
+    // Theme toggle
+    const themeBtn = $('#themeToggle');
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.dataset.theme = savedTheme;
+    themeBtn.addEventListener('click', ()=>{
+      const cur = document.documentElement.dataset.theme;
+      const next = cur === 'light' ? 'dark' : 'light';
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem('theme', next);
+    });
+
+    // Burger menu
+    const burger = $('#burger');
+    const navLinks = $('#navLinks');
+    burger.addEventListener('click', ()=>{
+      burger.classList.toggle('active');
+      navLinks.classList.toggle('open');
+      document.body.style.overflow = navLinks.classList.contains('open') ? 'hidden' : '';
+    });
+    navLinks.querySelectorAll('a').forEach(a =>
+      a.addEventListener('click', ()=>{
+        burger.classList.remove('active');
+        navLinks.classList.remove('open');
+        document.body.style.overflow = '';
+      })
+    );
+
+    // HERO Tiles (XL, responsive, plein écran)
+    (function initTiles(){
+      const wrap = document.querySelector('.tiles');
+      function build(){
+        wrap.innerHTML = '';
+        const size = parseInt(getComputedStyle(wrap).getPropertyValue('--size')) || 80;
+        const rect = wrap.getBoundingClientRect();
+        const cols = Math.ceil(rect.width / size);
+        const rows = Math.ceil(rect.height / size);
+        const frag = document.createDocumentFragment();
+        for(let i=0;i<cols*rows;i++){
+          const tile = document.createElement('div');
+          tile.className = 'tile';
+          tile.addEventListener('mousemove',(e)=>{
+            tile.style.setProperty('--mx', e.offsetX+'px');
+            tile.style.setProperty('--my', e.offsetY+'px');
+          });
+          frag.appendChild(tile);
+        }
+        wrap.appendChild(frag);
+      }
+      build();
+      window.addEventListener('resize', () => { clearTimeout(wrap._t); wrap._t=setTimeout(build,120); });
+    })();
+
+    // ====== PROJETS DU CARROUSEL (depuis tes dossiers) ======
+    // NB: dossier "Blizz’Art" encodé : Blizz%27Art
+    const PROJECTS = [
+      { title: "Blizz’art", href: "./Blizz%27Art/index.html", img: "./Blizz%27Art/blizzart_homepage.png", caption: "Plateforme artistique" },
+      { title: "iSave", href: "./iSave/index.html", img: "./iSave/isave_homepage.png", caption: "Association engagée" },
+      { title: "Tempo Fitness", href: "./tempo_fitness/index.html", img: "./tempo_fitness/images/tempo-homepage.png", caption: "Club de sport" },
+      { title: "Têtàtêtes", href: "./tetatetes/index.html", img: "./tetatetes/tetatetes_homepage.png", caption: "Magazine culturel" },
+      // Ajoute ici d'autres projets si tu en as un 5e
+    ];
+
+    (function renderProjectsAndRunMarquee() {
+      const track = document.getElementById('workTrack');
+      if(!track) return;
+
+      // 1) Génère les slides
+      track.innerHTML = PROJECTS.map(p => `
+        <a href="${p.href}" class="slide" target="_blank" rel="noopener">
+          <div class="slide__img">
+            <img src="${p.img}" alt="${p.title} — ${p.caption}">
+          </div>
+          <div class="slide__txt">${p.title} — ${p.caption}</div>
+        </a>
+      `).join('');
+
+      // 2) Duplique pour boucle continue
+      track.innerHTML += track.innerHTML;
+
+      // 3) Animation continue
+      let x = 0, speed = 0.9, playing = true;
+      function step(){
+        if(playing){
+          x -= speed;
+          const half = track.scrollWidth / 2;
+          if (Math.abs(x) >= half) x = 0;
+          track.style.transform = `translateX(${x}px)`;
+        }
+        requestAnimationFrame(step);
+      }
+      step();
+
+      track.addEventListener('mouseenter', ()=> playing=false);
+      track.addEventListener('mouseleave', ()=> playing=true);
+      track.addEventListener('touchstart', ()=> playing=false, {passive:true});
+      track.addEventListener('touchend', ()=> playing=true);
+    })();
+
+    // Timeline progress on scroll
+    (function timeline(){
+      const tl = document.getElementById('timeline');
+      const progress = tl.querySelector('.tl-progress');
+      function update(){
+        const r = tl.getBoundingClientRect();
+        const viewport = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        const visible = Math.min(1, Math.max(0, (viewport - r.top) / (viewport + r.height)));
+        progress.style.transform = `scaleX(${visible})`;
+      }
+      update();
+      window.addEventListener('scroll', update, {passive:true});
+      window.addEventListener('resize', update);
+    })();
+
+    // EmailJS
+    const EMAILJS_PUBLIC_KEY = "JlVPdGZfHPDni3Yyp";
+    const EMAILJS_SERVICE_ID = "service_a2gwgj2";
+    const EMAILJS_TEMPLATE_ID = "template_ijfo9ig";
+    if(window.emailjs){ emailjs.init(EMAILJS_PUBLIC_KEY); }
+    $('#contactForm').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const status = $('#formStatus');
+      status.textContent = "Envoi...";
+      try{
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+          from_name: $('#name').value,
+          reply_to: $('#email').value,
+          message: $('#message').value
+        });
+        status.textContent = "Message envoyé. Merci !";
+        e.target.reset();
+      }catch(err){
+        status.textContent = "Erreur d’envoi.";
+      }
+    });
+  </script>
+</body>
+</html>
