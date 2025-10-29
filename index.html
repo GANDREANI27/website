@@ -29,9 +29,10 @@
         <li><a class="nav__link" href="#work">Nos travaux</a></li>
         <li><a class="nav__link" href="#process">Process</a></li>
         <li><a class="nav__link" href="#contact">Contact</a></li>
+
         <!-- actions dans le menu mobile -->
         <li class="nav__mobile-actions">
-          <a href="#contact" class="btn primary small">Demander un devis</a>
+          <a href="#contact" class="btn primary large">Demander un devis</a>
         </li>
       </ul>
 
@@ -119,14 +120,14 @@
         <h2 class="section__title">Contact</h2>
         <p class="small">Réponse rapide sous 24h.</p>
         <ul class="contact__list">
-          <li><a href="mailto:hello@codaris.agency">contact@codarislabs.org</a></li>
-          <li><a href="tel:+33600000000">06 37 61 27 86</a></li>
+          <li><a href="mailto:hello@codaris.agency">hello@codaris.agency</a></li>
+          <li><a href="tel:+33600000000">+33 6 00 00 00 00</a></li>
         </ul>
       </div>
 
       <form id="contactForm" class="form">
         <div class="field">
-          <label for="name" class="small">Nom</label>
+          <label for="name" class="small">Nom</Label>
           <input id="name" type="text" placeholder="Votre nom" required />
         </div>
         <div class="field">
@@ -211,7 +212,7 @@
       { title: "Blizz’art", href: "./Blizz%27Art/index.html", img: "./Blizz%27Art/blizzart_homepage.png", caption: "Plateforme artistique" },
       { title: "iSave", href: "./iSave/index.html", img: "./iSave/isave_homepage.png", caption: "Association engagée" },
       { title: "Tempo Fitness", href: "./tempo_fitness/index.html", img: "./tempo_fitness/images/tempo-homepage.png", caption: "Club de sport" },
-      { title: "Têtàtêtes", href: "./tetatetes/index.html", img: "./tetatetes/tetatetes_homepage.png", caption: "Magazine culturel" },
+      { title: "Têtàtêtes", href: "./tetatetes/index.html", img: "./tetatetes/tetatetes_homepage.png", caption: "Magazine culturel" }
     ];
     (function renderProjectsAndRunMarquee() {
       const track = document.getElementById('workTrack');
@@ -303,7 +304,7 @@
       window.addEventListener('resize', update);
     })();
 
-    // EmailJS (facultatif : à commenter si inutile)
+    // EmailJS (facultatif)
     const EMAILJS_PUBLIC_KEY = "JlVPdGZfHPDni3Yyp";
     const EMAILJS_SERVICE_ID = "service_a2gwgj2";
     const EMAILJS_TEMPLATE_ID = "template_ijfo9ig";
