@@ -1,6 +1,7 @@
 /* =========================================================
-   Codaris — tiles on mobile + burger overlay full white
-   Light-only, services/work carousels auto, vertical timeline
+   Codaris — burger overlay (logo mobile + fade items)
+   Tiles desktop & mobile, carousels auto, vertical timeline
+   Light-only
 ========================================================= */
 
 /* THEME (light only) */
@@ -84,51 +85,65 @@ a{ color:inherit; text-decoration:none; }
 .burger.active span:nth-child(2){ opacity:0; }
 .burger.active span:nth-child(3){ transform:translateY(-9px) rotate(-45deg); }
 
-/* MOBILE NAV OVERLAY — full white, full height, perfectly centered */
+/* OVERLAY MOBILE — full white, full height, centered + fade items */
+.nav__overlay-header{ display:none; } /* caché desktop */
+
 @media (max-width:780px){
   .burger{ display:flex; }
   .nav__actions{ display:none; }
 
   .nav__links{
     position:fixed; left:0; top:0; width:100vw;
-    /* robust height for iOS/Android dynamic bars */
     height:100dvh; height:100svh; height:100vh;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     gap: 22px;
-    background:#fff;            /* pure white background */
-    color:#111;
-    padding: max(40px, env(safe-area-inset-top)) 20px max(40px, env(safe-area-inset-bottom));
+    background:#fff; color:#111;
+    padding: max(56px, env(safe-area-inset-top)) 20px max(40px, env(safe-area-inset-bottom));
     margin:0; z-index:2050;
 
-    /* Animation with transform avoids jumpy 'top' */
     transform: translateY(-100%);
     transition: transform .45s ease;
 
-    /* closed: don't intercept taps */
     pointer-events: none;
   }
   .nav__links.open{
     transform: translateY(0);
-    pointer-events: auto;        /* clickable only when open */
+    pointer-events: auto;
   }
 
+  /* Logo + nom en haut du menu (mobile only) */
+  .nav__overlay-header{
+    display:flex;
+    position:absolute;
+    top: max(16px, calc(env(safe-area-inset-top) + 8px));
+    left:50%; transform:translateX(-50%);
+    align-items:center; gap:10px;
+  }
+  .nav__overlay-header .logo__img{ width:28px; height:28px; }
+  .nav__overlay-header .logo__word{
+    font-family:var(--font-head); font-weight:800; color:#111; letter-spacing:.25px;
+  }
+
+  /* Liens + fade stagger */
   .nav__links a{
-    font-size:1.45rem;
-    font-family:var(--font-head);
-    font-weight:800;
-    text-align:center;
-    color:#111;
-    line-height:1.25;
+    font-size:1.45rem; font-family:var(--font-head); font-weight:800;
+    text-align:center; color:#111; line-height:1.25;
+    opacity:0; transform: translateY(8px);
   }
+  .nav__links.open a{ animation: fadeUp .36s ease both; }
+  .nav__links.open li:nth-child(2) a{ animation-delay:.05s; } /* Services */
+  .nav__links.open li:nth-child(3) a{ animation-delay:.10s; } /* Nos travaux */
+  .nav__links.open li:nth-child(4) a{ animation-delay:.15s; } /* Process */
+  .nav__links.open li:nth-child(5) a{ animation-delay:.20s; } /* Contact */
+  .nav__links.open li.nav__mobile-actions a{ animation-delay:.26s; }
 
-  .nav__mobile-actions{
-    display:flex; flex-direction:column; align-items:center; gap:14px;
-    margin-top: 10px;
-    width:100%;
-  }
-  .nav__mobile-actions .btn.large{ width: min(420px, 82vw); }
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
 
-  /* cleaner menu on mobile */
+  /* CTA en blanc dans l’overlay */
+  .nav__mobile-actions{ display:flex; flex-direction:column; align-items:center; gap:14px; margin-top:4px; width:100%; }
+  .nav__mobile-actions .btn.large{ width:min(420px,82vw); color:#fff !important; }
+
+  /* propre sur mobile */
   .nav__link::after{ display:none; }
 }
 
@@ -146,7 +161,7 @@ a{ color:inherit; text-decoration:none; }
   .btn.big{ padding:12px 16px; font-size:1rem; }
 }
 
-/* Vignette lisibilité (ne bloque pas les clics) */
+/* Vignette lisibilité */
 .hero::before{
   content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
   background:
@@ -167,10 +182,8 @@ a{ color:inherit; text-decoration:none; }
 .tile:hover{ background:var(--tile-bg-hover); border-color:var(--stroke-strong); }
 .tile:hover::after{ opacity:1; }
 
-/* mobile tiles: slightly denser for clarity */
-@media (max-width:780px){
-  :root{ --tile-size: 56px; }
-}
+/* densité mobile */
+@media (max-width:780px){ :root{ --tile-size:56px; } }
 
 /* CARDS */
 .card{
@@ -180,7 +193,7 @@ a{ color:inherit; text-decoration:none; }
 }
 .card:hover{ transform:translateY(-6px) scale(1.015); box-shadow:0 18px 46px rgba(0,0,0,.18); border-color:var(--stroke-strong); }
 
-/* === Disable hover effects on Services cards on mobile only === */
+/* Désactiver le hover sur Services uniquement sur mobile */
 @media (hover:none) and (pointer:coarse){
   .svc.card:hover{
     transform:none;
