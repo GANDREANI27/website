@@ -1,5 +1,5 @@
 /* =========================================================
-   Codaris — tiles also on mobile + burger overlay full white
+   Codaris — tiles on mobile + burger overlay full white
    Light-only, services/work carousels auto, vertical timeline
 ========================================================= */
 
@@ -45,7 +45,7 @@ a{ color:inherit; text-decoration:none; }
 @media (max-width:1000px){ .grid.four{ grid-template-columns:repeat(2,1fr); } }
 @media (max-width:620px){ .grid.four, .grid.two{ grid-template-columns:1fr; } }
 
-/* HEADER / NAV — white-ish for logo contrast */
+/* HEADER / NAV */
 .site-header{
   position:sticky; top:0; z-index:2000;
   background: rgba(255,255,255,.94);
@@ -84,13 +84,15 @@ a{ color:inherit; text-decoration:none; }
 .burger.active span:nth-child(2){ opacity:0; }
 .burger.active span:nth-child(3){ transform:translateY(-9px) rotate(-45deg); }
 
-/* MOBILE NAV OVERLAY — full white, perfectly centered */
+/* MOBILE NAV OVERLAY — full white, full height, perfectly centered */
 @media (max-width:780px){
   .burger{ display:flex; }
   .nav__actions{ display:none; }
 
   .nav__links{
-    position:fixed; inset:0; top:-100vh;
+    position:fixed; left:0; top:0; width:100vw;
+    /* robust height for iOS/Android dynamic bars */
+    height:100dvh; height:100svh; height:100vh;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     gap: 22px;
     background:#fff;            /* pure white background */
@@ -98,12 +100,15 @@ a{ color:inherit; text-decoration:none; }
     padding: max(40px, env(safe-area-inset-top)) 20px max(40px, env(safe-area-inset-bottom));
     margin:0; z-index:2050;
 
-    /* Option A — when closed, don't intercept taps */
+    /* Animation with transform avoids jumpy 'top' */
+    transform: translateY(-100%);
+    transition: transform .45s ease;
+
+    /* closed: don't intercept taps */
     pointer-events: none;
-    transition: top .45s ease;
   }
   .nav__links.open{
-    top:0;
+    transform: translateY(0);
     pointer-events: auto;        /* clickable only when open */
   }
 
@@ -149,7 +154,7 @@ a{ color:inherit; text-decoration:none; }
     radial-gradient(900px 520px at 50% 120%, var(--hero-vignette-bottom), transparent 60%);
 }
 
-/* TILES — now also enabled on mobile */
+/* TILES — desktop + mobile */
 .tiles{
   --size: var(--tile-size);
   position:absolute; inset:0; display:grid; z-index:2;
@@ -162,9 +167,9 @@ a{ color:inherit; text-decoration:none; }
 .tile:hover{ background:var(--tile-bg-hover); border-color:var(--stroke-strong); }
 .tile:hover::after{ opacity:1; }
 
-/* mobile tiles: slightly larger density for perf/clarity */
+/* mobile tiles: slightly denser for clarity */
 @media (max-width:780px){
-  :root{ --tile-size: 56px; }  /* denser grid on mobile */
+  :root{ --tile-size: 56px; }
 }
 
 /* CARDS */
@@ -174,6 +179,16 @@ a{ color:inherit; text-decoration:none; }
   transition:transform .22s cubic-bezier(.2,.7,.2,1), box-shadow .22s, border-color .22s, background .22s;
 }
 .card:hover{ transform:translateY(-6px) scale(1.015); box-shadow:0 18px 46px rgba(0,0,0,.18); border-color:var(--stroke-strong); }
+
+/* === Disable hover effects on Services cards on mobile only === */
+@media (hover:none) and (pointer:coarse){
+  .svc.card:hover{
+    transform:none;
+    box-shadow:var(--shadow);
+    border-color:var(--stroke-softer);
+    background:var(--surface);
+  }
+}
 
 /* WORK MARQUEE */
 .marquee{ overflow:hidden; border-radius:16px; border:1px solid var(--stroke-softer); background:var(--surface); }
@@ -251,3 +266,4 @@ a{ color:inherit; text-decoration:none; }
 .small{ font-size:.92rem; }
 .muted{ color:var(--muted); }
 .site-footer{ padding:46px 0 80px; color:var(--muted); text-align:center; }
+
