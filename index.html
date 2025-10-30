@@ -24,7 +24,7 @@
         <span></span><span></span><span></span>
       </button>
 
-      <!-- NOTE: overlay menu lives in this UL -->
+      <!-- Overlay menu lives here -->
       <ul class="nav__links" id="navLinks" aria-hidden="true">
         <li><a class="nav__link" href="#services">Services</a></li>
         <li><a class="nav__link" href="#work">Nos travaux</a></li>
@@ -43,7 +43,7 @@
 
   <!-- HERO -->
   <section id="hero" class="hero container-bleed">
-    <!-- carrelage: now also visible on mobile -->
+    <!-- carrelage visible desktop + mobile -->
     <div class="tiles" aria-hidden="true"></div>
     <div class="hero__content">
       <h1 class="hero__title">Des sites modernes, qui convertissent</h1>
@@ -159,7 +159,7 @@
     // Year
     $('#y').textContent = new Date().getFullYear();
 
-    // ===== Burger menu (Option A: pointer-events fix + centered overlay) =====
+    // ===== Burger menu (overlay full-screen + pointer-events fix) =====
     const burger = document.getElementById('burger');
     const navLinks = document.getElementById('navLinks');
 
@@ -179,7 +179,7 @@
       })
     );
 
-    // ===== HERO Tiles (desktop + now mobile) =====
+    // ===== HERO Tiles (desktop + mobile) =====
     (function initTiles(){
       const wrap = document.querySelector('.tiles');
       function build(){
@@ -206,7 +206,7 @@
 
     // ===== PROJETS CAROUSEL (auto + manuel) =====
     const PROJECTS = [
-      { title: "Blizz’art", href: "./Blizz%27Art/index.html", img: "./Blizz%27Art/images/blizzart_homepage.png", caption: "Plateforme artistique" },
+      { title: "Blizz’art", href: "./Blizz%27Art/index.html", img: "./Blizz%27Art/blizzart_homepage.png", caption: "Plateforme artistique" },
       { title: "iSave", href: "./iSave/index.html", img: "./iSave/isave_homepage.png", caption: "Association engagée" },
       { title: "Tempo Fitness", href: "./tempo_fitness/index.html", img: "./tempo_fitness/images/tempo-homepage.png", caption: "Club de sport" },
       { title: "Têtàtêtes", href: "./tetatetes/index.html", img: "./tetatetes/tetatetes_homepage.png", caption: "Magazine culturel" }
@@ -325,4 +325,5 @@
   </script>
 </body>
 </html>
+
 
