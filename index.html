@@ -24,12 +24,19 @@
         <span></span><span></span><span></span>
       </button>
 
-      <!-- Overlay menu lives here -->
+      <!-- Overlay menu -->
       <ul class="nav__links" id="navLinks" aria-hidden="true">
+        <!-- Visible uniquement sur mobile -->
+        <li class="nav__overlay-header">
+          <img src="images/codaris-logo.png" alt="" class="logo__img">
+          <span class="logo__word">codaris</span>
+        </li>
+
         <li><a class="nav__link" href="#services">Services</a></li>
         <li><a class="nav__link" href="#work">Nos travaux</a></li>
         <li><a class="nav__link" href="#process">Process</a></li>
         <li><a class="nav__link" href="#contact">Contact</a></li>
+
         <li class="nav__mobile-actions">
           <a href="#contact" class="btn primary large">Demander un devis</a>
         </li>
@@ -43,7 +50,6 @@
 
   <!-- HERO -->
   <section id="hero" class="hero container-bleed">
-    <!-- carrelage visible desktop + mobile -->
     <div class="tiles" aria-hidden="true"></div>
     <div class="hero__content">
       <h1 class="hero__title">Des sites modernes, qui convertissent</h1>
@@ -152,14 +158,12 @@
   <!-- EmailJS (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
-  <!-- APP JS -->
+  <!-- APP JS (inline) -->
   <script>
     const $ = s => document.querySelector(s);
-
-    // Year
     $('#y').textContent = new Date().getFullYear();
 
-    // ===== Burger menu (overlay full-screen + pointer-events fix) =====
+    // ===== Burger menu (overlay full-screen + fade + safe areas) =====
     const burger = document.getElementById('burger');
     const navLinks = document.getElementById('navLinks');
 
@@ -179,7 +183,7 @@
       })
     );
 
-    // ===== HERO Tiles (desktop + mobile) =====
+    // ===== Tiles (desktop + mobile) =====
     (function initTiles(){
       const wrap = document.querySelector('.tiles');
       function build(){
@@ -204,7 +208,7 @@
       window.addEventListener('resize', () => { clearTimeout(wrap._t); wrap._t=setTimeout(build,120); });
     })();
 
-    // ===== PROJETS CAROUSEL (auto + manuel) =====
+    // ===== Projects carousel (auto + manual pause) =====
     const PROJECTS = [
       { title: "Blizz’art", href: "./Blizz%27Art/index.html", img: "./Blizz%27Art/blizzart_homepage.png", caption: "Plateforme artistique" },
       { title: "iSave", href: "./iSave/index.html", img: "./iSave/isave_homepage.png", caption: "Association engagée" },
@@ -219,7 +223,7 @@
           <div class="slide__img"><img src="${p.img}" alt="${p.title} — ${p.caption}"></div>
           <div class="slide__txt">${p.title} — ${p.caption}</div>
         </a>`).join('');
-      track.innerHTML += track.innerHTML; // duplication
+      track.innerHTML += track.innerHTML; // loop
 
       let x = 0, speed = 0.9, playing = true;
       function step(){
@@ -237,7 +241,7 @@
       ['mouseleave','touchend','pointerup','pointercancel'].forEach(evt => track.addEventListener(evt, ()=> playing=true, {passive:true}));
     })();
 
-    // ===== Services → carrousel mobile (auto + manuel) =====
+    // ===== Services → carousel on mobile (auto) =====
     (function servicesCarousel(){
       const list = document.getElementById('servicesList');
       const carousel = document.getElementById('servicesCarousel');
@@ -246,7 +250,7 @@
       function toCarousel(){
         const cards = Array.from(list.querySelectorAll('.svc.card'));
         track.innerHTML = cards.map(c => `<article class="svc card">${c.innerHTML}</article>`).join('');
-        track.innerHTML += track.innerHTML; // boucle
+        track.innerHTML += track.innerHTML; // loop
 
         list.hidden = true;
         carousel.hidden = false;
@@ -278,7 +282,7 @@
       apply(mql); mql.addEventListener('change', apply);
     })();
 
-    // ===== Timeline progress (horiz desktop / vert mobile) =====
+    // ===== Timeline progress (horizontal desktop / vertical mobile) =====
     (function timeline(){
       const tl = document.getElementById('timeline');
       const progress = tl.querySelector('.tl-progress');
@@ -301,7 +305,7 @@
       window.addEventListener('resize', update);
     })();
 
-    // EmailJS (facultatif)
+    // ===== EmailJS (facultatif) =====
     const EMAILJS_PUBLIC_KEY = "JlVPdGZfHPDni3Yyp";
     const EMAILJS_SERVICE_ID = "service_a2gwgj2";
     const EMAILJS_TEMPLATE_ID = "template_ijfo9ig";
